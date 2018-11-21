@@ -5,7 +5,7 @@ const shipSchema = new mongoose.Schema({
 	name: {type: String, required: true },
 	type: {type: String, required: true },
 	length: {type: String, required: true },
-	owner: {type: String }
+	owner: {type: String, required: true }
 });
 
 module.exports = mongoose.model('Ship', shipSchema);
