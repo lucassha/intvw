@@ -23,12 +23,27 @@ const mongoose = require('mongoose');
 const shipRoutes = require('./api/routes/Ships');
 const userRoutes = require('./api/routes/Users');
 
-mongoose.connect('mongodb://admin:admin@myproject-shard-00-00-ecis9.mongodb.net:27017,myproject-shard-00-01-ecis9.mongodb.net:27017,myproject-shard-00-02-ecis9.mongodb.net:27017/test?ssl=true&replicaSet=myproject-shard-0&authSource=admin&retryWrites=true',
-	{
+// create connection parameters
+const options = {
 		useNewUrlParser: true,
 		useCreateIndex: true
-	}
-);
+	};
+const uri = 'mongodb://mongo:27017/docker-node';
+
+
+// connect with retry var found here:
+// https://github.com/docker/hub-feedback/issues/1255
+const connectWithRetry = () => {
+  console.log('MongoDB connection with retry')
+  mongoose.connect(uri, options).then(()=>{
+    console.log('MongoDB is connected')
+  }).catch(err=>{
+    console.log('MongoDB connection unsuccessful, retry after 5 seconds.')
+    setTimeout(connectWithRetry, 5000)
+  })
+}
+
+connectWithRetry()
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
