@@ -20,7 +20,7 @@ spec:
         env: dev
     spec:
       containers:
-      - image: lucassha/nodejwt:v5
+      - image: lucassha/nodejwt:v6
         name: node
         ports:
         - containerPort: 3000
