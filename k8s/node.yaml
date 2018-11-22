@@ -30,8 +30,4 @@ spec:
               secretKeyRef:
                 name: node-hash-secret
                 key: SECRET_HASH
-        # readinessProbe:
-        #   tcpSocket: 
-        #     port: 27017
-        #   initialDelaySeconds: 30
-        #   periodSeconds: 5
+        

@@ -26,6 +26,11 @@ spec:
         volumeMounts:
           - mountPath: "/data/db"
             name: mongodb-storage
+        readinessProbe:
+          tcpSocket: 
+            port: 27017
+          initialDelaySeconds: 30
+          periodSeconds: 10
       volumes:
         - name: mongodb-storage
           persistentVolumeClaim:
