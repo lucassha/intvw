@@ -58,9 +58,9 @@ app.use((req, res, next) => {
 	next(); 
 });
 
-app.get('/', (req, res) => {
-  res.send('Hello world');
-});
+// app.get('/', (req, res) => {
+//   res.send('Hello world');
+// });
 
 app.use('/ships', shipRoutes);
 app.use('/users', userRoutes);

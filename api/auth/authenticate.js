@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
 		// in the var below, remove bearer and the white space
 		const token = req.headers.authorization.split(" ")[1];
 		// console.log(token);
-		const decoded = jwt.verify(token, 'secret');
+		const decoded = jwt.verify(token, process.env.SECRET_HASH);
 		// req.userData = decoded;
 	} catch(error){
 		return res.status(401).json({
