@@ -1,0 +1,33 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: node
+  name: node
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: api
+      env: dev
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        role: api
+        env: dev
+    spec:
+      containers:
+      - image: lucassha/nodejwt:v5
+        name: node
+        ports:
+        - containerPort: 3000
+        env:
+          - name: SECRET_HASH
+            valueFrom:
+              secretKeyRef:
+                name: node-hash-secret
+                key: SECRET_HASH
+        
