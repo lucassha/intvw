@@ -20,10 +20,16 @@ spec:
         env: dev
     spec:
       containers:
-      - image: lucassha/nodejwt:v4
+      - image: lucassha/nodejwt:v5
         name: node
         ports:
         - containerPort: 3000
+        env:
+          - name: SECRET_HASH
+            valueFrom:
+              secretKeyRef:
+                name: node-hash-secret
+                key: SECRET_HASH
         # readinessProbe:
         #   tcpSocket: 
         #     port: 27017

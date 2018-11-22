@@ -31,7 +31,7 @@ const options = {
 const uri = 'mongodb://mongo-cluster-ip-service:27017/docker-node';
 
 
-// connect with retry var found here:
+// connect with retry func found here:
 // https://github.com/docker/hub-feedback/issues/1255
 const connectWithRetry = () => {
   mongoose.connect(uri, options).then(()=>{

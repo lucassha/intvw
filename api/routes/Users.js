@@ -152,7 +152,7 @@ router.post('/login', (req, res, next) => {
 						username: user.username,
 						userId: user._id
 					}, 
-					'secret',
+					process.env.SECRET_HASH,
 					{ expiresIn: "1h" });
 
 				return res.status(200).json({
