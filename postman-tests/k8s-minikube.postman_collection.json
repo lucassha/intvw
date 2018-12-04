@@ -1,0 +1,1326 @@
+{
+	"info": {
+		"_postman_id": "cf97182a-cc97-455a-9edb-f2e249b347de",
+		"name": "k8s-minikube",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create user1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fbe58a7e-680a-4a96-8dd4-b6135ae4c56f",
+						"exec": [
+							"pm.test(\"Status code is 201. User 1 created. Setting up global vars for user1_id, user1_pw, user1_username\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"// // get post response data",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.globals.set(\"user1_id\", jsonData._id);",
+							"pm.globals.set(\"user1_pw\", jsonData.hashed_pw);",
+							"pm.globals.set(\"user1_username\", jsonData.username);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"shannon\",\n\t\"password\": \"shannon\"\n}"
+				},
+				"url": {
+					"raw": "http://192.168.99.100/users/signup",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"users",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create user2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fbe58a7e-680a-4a96-8dd4-b6135ae4c56f",
+						"exec": [
+							"pm.test(\"Status code is 201. User 2 created. Setting up global vars for user2_id, user2_pw, user2_username\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"// // get post response data",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.globals.set(\"user2_id\", jsonData._id);",
+							"pm.globals.set(\"user2_pw\", jsonData.hashed_pw);",
+							"pm.globals.set(\"user2_username\", jsonData.username);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"caitlyn\",\n\t\"password\": \"caitlyn\"\n}"
+				},
+				"url": {
+					"raw": "http://192.168.99.100/users/signup",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"users",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "confirm users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4e8abecc-9351-4df8-9f92-5a993ac90e36",
+						"exec": [
+							"pm.test(\"Status code is 200. GET Request for all USERS a success.\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"var user1_id = pm.globals.get(\"user1_id\");",
+							"var user2_id = pm.globals.get(\"user2_id\");",
+							"",
+							"pm.test(\"Confirm two users created\", function(){",
+							"    pm.expect(jsonData.count).to.be.eql(2);",
+							"});",
+							"",
+							"pm.test(\"Confirm user1_id is the same as created.\", function(){",
+							"    pm.expect(jsonData.ships[0]._id).to.be.eql(user1_id); ",
+							"});",
+							"",
+							"pm.test(\"Confirm user2_id is the same as created.\", function(){",
+							"    pm.expect(jsonData.ships[1]._id).to.be.eql(user2_id); ",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.99.100/users/",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create user1 jwt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6053659b-f225-46f9-8282-7f529af2f86a",
+						"exec": [
+							"pm.test(\"Status code is 200. User 1 logged in and jwt created\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// // get post response data",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.globals.set(\"user1_jwt_token\", jsonData.jwt_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"shannon\",\n\t\"password\": \"shannon\"\n}"
+				},
+				"url": {
+					"raw": "http://192.168.99.100/users/login",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create user2 jwt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6053659b-f225-46f9-8282-7f529af2f86a",
+						"exec": [
+							"pm.test(\"Status code is 200. User 2 logged in and jwt created\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// // get post response data",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.globals.set(\"user2_jwt_token\", jsonData.jwt_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"caitlyn\",\n\t\"password\": \"caitlyn\"\n}"
+				},
+				"url": {
+					"raw": "http://192.168.99.100/users/login",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create ship1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "90e5a673-09e9-4483-8868-8428a0ea7408",
+						"exec": [
+							"pm.test(\"Status code is 201. POST request to create a ship is a success. Valid JWT passed in through authorization header with {{user1_jwt_token}} global variable.\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.globals.set(\"ship1_id\", jsonData.ship_id);",
+							"pm.globals.set(\"ship1_owner\", jsonData.ship_owner);",
+							"pm.globals.set(\"ship1_type\", jsonData.ship_type);",
+							"pm.globals.set(\"ship1_length\", jsonData.ship_length);",
+							"pm.globals.set(\"ship1_name\", jsonData.ship_name);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user1_jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"ship1\",\n\t\"type\": \"ship1\",\n\t\"length\": 100,\n\t\"owner\": \"shannon\"\n}"
+				},
+				"url": {
+					"raw": "http://192.168.99.100/ships/",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"ships",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create ship2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "90e5a673-09e9-4483-8868-8428a0ea7408",
+						"exec": [
+							"pm.test(\"Status code is 201. POST request to create a ship is a success. Valid JWT passed in through authorization header with {{user1_jwt_token}} global variable. Second ship created and associated with owner 'shannon'\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.globals.set(\"ship2_id\", jsonData.ship_id);",
+							"pm.globals.set(\"ship2_owner\", jsonData.ship_owner);",
+							"pm.globals.set(\"ship2_type\", jsonData.ship_type);",
+							"pm.globals.set(\"ship2_length\", jsonData.ship_length);",
+							"pm.globals.set(\"ship2_name\", jsonData.ship_name);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user1_jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"ship2\",\n\t\"type\": \"ship2\",\n\t\"length\": 200,\n\t\"owner\": \"shannon\"\n}"
+				},
+				"url": {
+					"raw": "http://192.168.99.100/ships/",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"ships",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create ship3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "90e5a673-09e9-4483-8868-8428a0ea7408",
+						"exec": [
+							"pm.test(\"Status code is 201. POST request to create a ship is a success. Valid JWT passed in through authorization header with {{user2_jwt_token}} global variable. Third ship created and associated with owner 'caitlyn'\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.globals.set(\"ship3_id\", jsonData.ship_id);",
+							"pm.globals.set(\"ship3_owner\", jsonData.ship_owner);",
+							"pm.globals.set(\"ship3_type\", jsonData.ship_type);",
+							"pm.globals.set(\"ship3_length\", jsonData.ship_length);",
+							"pm.globals.set(\"ship3_name\", jsonData.ship_name);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user2_jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"ship3\",\n\t\"type\": \"ship3\",\n\t\"length\": 300,\n\t\"owner\": \"caitlyn\"\n}"
+				},
+				"url": {
+					"raw": "http://192.168.99.100/ships/",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"ships",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create ship4 (w/ no JWT)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "90e5a673-09e9-4483-8868-8428a0ea7408",
+						"exec": [
+							"pm.test(\"Status code is 401. POST request to create a ship is a failure. No JWT passed in\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"ship3\",\n\t\"type\": \"ship3\",\n\t\"length\": 300,\n\t\"owner\": \"caitlyn\"\n}"
+				},
+				"url": {
+					"raw": "http://192.168.99.100/ships/",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"ships",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create ship4 (w/ wrong JWT)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "90e5a673-09e9-4483-8868-8428a0ea7408",
+						"exec": [
+							"pm.test(\"Status code is 403. POST request to create a ship is a failure. JWT passed in is valid but the decoded owner is incorrect.\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user1_jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"ship4\",\n\t\"type\": \"ship4\",\n\t\"length\": 300,\n\t\"owner\": \"caitlyn\"\n}"
+				},
+				"url": {
+					"raw": "http://192.168.99.100/ships/",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"ships",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all ships",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "db242c71-8ccb-4f64-8010-de9f2f75f202",
+						"exec": [
+							"pm.test(\"Status code is 200. GET Request for all SHIPS a success.\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"var ship1_id = pm.globals.get(\"ship1_id\");",
+							"var ship1_owner = pm.globals.get(\"ship1_owner\");",
+							"var ship1_length = pm.globals.get(\"ship1_length\");",
+							"var ship1_name = pm.globals.get(\"ship1_name\");",
+							"var ship1_type = pm.globals.get(\"ship1_type\");",
+							"",
+							"var ship2_id = pm.globals.get(\"ship2_id\");",
+							"var ship2_owner = pm.globals.get(\"ship2_owner\");",
+							"var ship2_length = pm.globals.get(\"ship2_length\");",
+							"var ship2_name = pm.globals.get(\"ship2_name\");",
+							"var ship2_type = pm.globals.get(\"ship2_type\");",
+							"",
+							"var ship3_id = pm.globals.get(\"ship3_id\");",
+							"var ship3_owner = pm.globals.get(\"ship3_owner\");",
+							"var ship3_length = pm.globals.get(\"ship3_length\");",
+							"var ship3_name = pm.globals.get(\"ship3_name\");",
+							"var ship3_type = pm.globals.get(\"ship3_type\");",
+							"",
+							"pm.test(\"Confirm three ships created\", function(){",
+							"    pm.expect(jsonData.count).to.be.eql(3);",
+							"});",
+							"",
+							"pm.test(\"Confirm ship1 vars all the same\", function(){",
+							"    pm.expect(jsonData.ships[0]._id).to.be.eql(ship1_id);",
+							"    pm.expect(jsonData.ships[0].type).to.be.eql(ship1_type);",
+							"    pm.expect(jsonData.ships[0].length).to.be.eql(ship1_length);",
+							"    pm.expect(jsonData.ships[0].owner).to.be.eql(ship1_owner);",
+							"    pm.expect(jsonData.ships[0].name).to.be.eql(ship1_name);",
+							"});",
+							"",
+							"pm.test(\"Confirm ship2 vars all the same\", function(){",
+							"    pm.expect(jsonData.ships[1]._id).to.be.eql(ship2_id);",
+							"    pm.expect(jsonData.ships[1].type).to.be.eql(ship2_type);",
+							"    pm.expect(jsonData.ships[1].length).to.be.eql(ship2_length);",
+							"    pm.expect(jsonData.ships[1].owner).to.be.eql(ship2_owner);",
+							"    pm.expect(jsonData.ships[1].name).to.be.eql(ship2_name);",
+							"});",
+							"",
+							"pm.test(\"Confirm ship3 vars all the same\", function(){",
+							"    pm.expect(jsonData.ships[2]._id).to.be.eql(ship3_id);",
+							"    pm.expect(jsonData.ships[2].type).to.be.eql(ship3_type);",
+							"    pm.expect(jsonData.ships[2].length).to.be.eql(ship3_length);",
+							"    pm.expect(jsonData.ships[2].owner).to.be.eql(ship3_owner);",
+							"    pm.expect(jsonData.ships[2].name).to.be.eql(ship3_name);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.99.100/ships/",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"ships",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user1 ships ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "725919cc-1cb3-456c-afdf-7d15de1c75e2",
+						"exec": [
+							"pm.test(\"Status code is 200. GET Request for all SHIPS with owner 'shannon' ({{user1_id}}) a success .\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"var ship1_id = pm.globals.get(\"ship1_id\");",
+							"var ship2_id = pm.globals.get(\"ship2_id\");",
+							"var ship_owner = 'shannon';",
+							"",
+							"pm.test(\"Confirm two ships populated\", function(){",
+							"    pm.expect(jsonData.count).to.be.eql(2);",
+							"});",
+							"",
+							"pm.test(\"Confirm ship ids to confirm proper ships\", function(){",
+							"    pm.expect(jsonData.ships[0]._id).to.be.eql(ship1_id);",
+							"    pm.expect(jsonData.ships[1]._id).to.be.eql(ship2_id);",
+							"});",
+							"",
+							"pm.test(\"Confirm ship owner\", function(){",
+							"    pm.expect(jsonData.ships[0].owner).to.be.eql(ship_owner);",
+							"    pm.expect(jsonData.ships[1].owner).to.be.eql(ship_owner);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user1_jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.99.100/users/{{user1_id}}/ships",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"users",
+						"{{user1_id}}",
+						"ships"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user2 ships",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "725919cc-1cb3-456c-afdf-7d15de1c75e2",
+						"exec": [
+							"pm.test(\"Status code is 200. GET Request for all SHIPS with owner 'caitlyn' ({{user2_id}}) a success .\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"var ship3_id = pm.globals.get(\"ship3_id\");",
+							"var ship_owner = 'caitlyn';",
+							"",
+							"pm.test(\"Confirm 1 ship populated\", function(){",
+							"    pm.expect(jsonData.count).to.be.eql(1);",
+							"});",
+							"",
+							"pm.test(\"Confirm ship id to confirm proper ships\", function(){",
+							"    pm.expect(jsonData.ships[0]._id).to.be.eql(ship3_id);",
+							"});",
+							"",
+							"pm.test(\"Confirm ship owner\", function(){",
+							"    pm.expect(jsonData.ships[0].owner).to.be.eql(ship_owner);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user2_jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.99.100/users/{{user2_id}}/ships",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"users",
+						"{{user2_id}}",
+						"ships"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user1 ships (w/ no JWT)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "725919cc-1cb3-456c-afdf-7d15de1c75e2",
+						"exec": [
+							"pm.test(\"Status code is 401. Cannot get ships based on user without JWT.\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.99.100/users/{{user1_id}}/ships",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"users",
+						"{{user1_id}}",
+						"ships"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user1 ships (w/ user2 JWT)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "725919cc-1cb3-456c-afdf-7d15de1c75e2",
+						"exec": [
+							"pm.test(\"Status code is 403. Passed in JWT is valid but the incorrect user.\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user2_jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.99.100/users/{{user1_id}}/ships",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"users",
+						"{{user1_id}}",
+						"ships"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete ship1 (no jwt)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "23e6e600-3747-4457-95ed-41f886109413",
+						"exec": [
+							"pm.test(\"Status code is 401. Cannot delete. No JWT passed in.\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.99.100/ships/{{ship1_id}}",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"ships",
+						"{{ship1_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete ship1 (incorrect jwt)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "23e6e600-3747-4457-95ed-41f886109413",
+						"exec": [
+							"pm.test(\"Status code is 403. Cannot delete. Valid JWT passed in but decoded values confirm username is not correct.\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user2_jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.99.100/ships/{{ship1_id}}",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"ships",
+						"{{ship1_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete ship1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "23e6e600-3747-4457-95ed-41f886109413",
+						"exec": [
+							"pm.test(\"Status code is 204. Correct JWT for user1 passed in so ship1 is deleted.\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user1_jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.99.100/ships/{{ship1_id}}",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"ships",
+						"{{ship1_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete ship2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "23e6e600-3747-4457-95ed-41f886109413",
+						"exec": [
+							"pm.test(\"Status code is 204. Correct JWT for user1 passed in so ship2 is deleted.\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user1_jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.99.100/ships/{{ship2_id}}",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"ships",
+						"{{ship2_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete ship3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "23e6e600-3747-4457-95ed-41f886109413",
+						"exec": [
+							"pm.test(\"Status code is 204. Correct JWT for user2 passed in so ship3 is deleted.\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user2_jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.99.100/ships/{{ship3_id}}",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"ships",
+						"{{ship3_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all ships",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "db242c71-8ccb-4f64-8010-de9f2f75f202",
+						"exec": [
+							"pm.test(\"Status code is 200. GET Request for all SHIPS a success.\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Confirm all ships deleted. Count equal to zero.\", function(){",
+							"    pm.expect(jsonData.count).to.be.eql(0);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.99.100/ships/",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"ships",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete user1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3328f440-c4df-4e40-84cb-9e8a61cdaa51",
+						"exec": [
+							"pm.test(\"Status code is 204. User deleted.\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.99.100/users/{{user1_id}}",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"users",
+						"{{user1_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete user2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5279953c-5fa1-41ba-bbb8-07f88c1af06b",
+						"exec": [
+							"pm.test(\"Status code is 204. User deleted.\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.99.100/users/{{user2_id}}",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"path": [
+						"users",
+						"{{user2_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
