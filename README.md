@@ -1,6 +1,6 @@
 # interview
 
-Node.JS REST API sample w/ MongoDB Atlas backend
+Node.JS REST API sample w/ MongoDB backend
 
 Simulates route restriction based on stateless server authentication with a JWT.
 
